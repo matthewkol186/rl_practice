@@ -58,6 +58,23 @@ class Player(object):
             self.values[reversed_history[i]] = self.values[reversed_history[i]] + ALPHA * (self.values[reversed_history[i - 1]] - self.values[reversed_history[i]])
             if DEBUG:
                 print('Value for state', reversed_history[i], self.values[reversed_history[i]])
+        self.state_history = []
+
+class Human:
+    def __init__(self):
+        self.letter = 'O'
+        self.player = PLAYER2
+
+    def take_action(self, env, DEBUG=False):
+        user_str = input('Enter a coordinate x,y: ')
+        move_loc = tuple([int(x) for x in user_str.split(",")])
+        env.register_move(move_loc, self.letter, self.player)
+
+    def update_state_history(self, state):
+        pass
+
+    def update(self, env, DEBUG=False):
+        pass
         
 class Environment:
     def __init__(self):
@@ -162,9 +179,13 @@ player1 = Player(letter='X', player=PLAYER1)
 player2 = Player(letter='O', player=PLAYER2)
 environment = Environment()
 
-for i in range(100):
-    play_game(player1, player2, environment, draw=False if i % 10 != 0 else True)
+for i in range(10000):
+    play_game(player1, player2, environment, draw=False if i % 100 != 0 else True)
     environment.reset()
 
 print(json.dumps(player1.values, indent=1))
 print(json.dumps(player2.values, indent=1))
+
+human = Human()
+EPS = -1
+play_game(player1, human, environment, draw=True)
